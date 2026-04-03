@@ -2,7 +2,7 @@
 
 An interactive data visualization exploring 150 years of cinema through the Bechdel Test. Built with D3.js and plain HTML/CSS/JavaScript.
 
-**Live preview:** `https://juliatvenko.github.io/bechdel-data-viz/`.
+**Live preview:** [bechdel-data-viz](https://juliatvenko.github.io/bechdel-data-viz/).
 
 ---
 

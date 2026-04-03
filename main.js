@@ -169,21 +169,29 @@ Promise.all([
   drawRadial(genreData);
   drawScatter(raw);
 
-  // Redraw on resize
+  // Redraw on resize — each chart respects its own active filter
   let resizeTimer;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      const activeBtn = document.querySelector(".filter-btn.active");
-      const from = activeBtn ? +activeBtn.dataset.from : 1870;
-      const to   = activeBtn ? +activeBtn.dataset.to   : 2030;
-      drawBar(allData.filter(d => d.decade >= from && d.decade <= to));
+      function activeRange(selector) {
+        const btn = document.querySelector(`${selector}.active`);
+        return btn ? [+btn.dataset.from, +btn.dataset.to] : [1870, 2030];
+      }
+
+      const [fb, tb] = activeRange(".filter-btn-bar");
+      drawBar(allData.filter(d => d.decade >= fb && d.decade <= tb));
+
       d3.select("#chart-line").selectAll("*").remove();
       drawLine();
+
+      const [fr, tr] = activeRange(".filter-btn-radial");
       d3.select("#chart-radial").selectAll("*").remove();
-      drawRadial(genreData);
+      drawRadial(aggregateByGenre(raw.filter(d => d.year >= fr && d.year <= tr)));
+
+      const [fs, ts] = activeRange(".filter-btn-scatter");
       d3.select("#chart-scatter").selectAll("*").remove();
-      drawScatter(raw);
+      drawScatter(raw.filter(d => d.year >= fs && d.year <= ts));
     }, 200);
   });
 

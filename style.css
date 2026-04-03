@@ -307,12 +307,34 @@ body {
 }
 
 /* ---- RESPONSIVE ---- */
+html, body { overflow-x: hidden; }
+
 @media (max-width: 768px) {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .section { padding: 4rem 1.5rem; }
+  .container { padding: 0 1.5rem; }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
+  .section { padding: 3rem 1rem; }
+  .container { padding: 0 1rem; }
+  .hero { padding: 2.5rem 1rem; min-height: 88vh; }
   .stats-grid { grid-template-columns: 1fr 1fr; }
-  .rule { gap: 1rem; }
-  .section { padding: 4rem 1.5rem; }
+  .stat-card { padding: 1.25rem 1rem; }
+  .stat-num { font-size: 2.2rem; }
+  .chart-desc { font-size: 13px; }
+  .chart-intro { margin-bottom: 1.5rem; }
+  .legend { gap: 4px 10px; font-size: 12px; }
+  /* bigger tap targets for filter buttons */
+  .filter-btn { padding: 8px 14px; font-size: 13px; min-height: 38px; }
+  .filter-row { gap: 8px; margin-bottom: 1rem; }
+}
+
+@media (max-width: 400px) {
+  .section { padding: 2.5rem 0.75rem; }
+  .container { padding: 0 0.75rem; }
+  .filter-btn { padding: 7px 10px; font-size: 12px; }
+  .filter-btns { gap: 4px; }
+  .rule { gap: 0.75rem; }
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 0; }
 }

@@ -16,9 +16,8 @@
       <p class="eyebrow">Data · Gender · Cinema</p>
       <h1>Do women<br><em>exist in film?</em></h1>
       <p class="hero-lead">The Bechdel Test checks three deceptively simple conditions. Most Hollywood films still fail them.</p>
-      <div class="hero-meta">9,832 films · 1888–2020 · bechdeltest.com</div>
+      <div class="hero-meta">10,703 films · 1874–2026 · bechdeltest.com</div>
     </div>
-    <div class="hero-scroll">↓</div>
   </section>
 
   <!-- RULES -->
@@ -49,19 +48,27 @@
       <p class="section-label">The big picture</p>
       <div class="stats-grid">
         <div class="stat-card">
-          <span class="stat-num" data-target="57">0</span><span class="stat-unit">%</span>
+          <div class="stat-value">
+            <span class="stat-num" data-target="56">0</span><span class="stat-unit">%</span>
+          </div>
           <p class="stat-label">of films pass the test</p>
         </div>
         <div class="stat-card">
-          <span class="stat-num" data-target="9832">0</span>
+          <div class="stat-value">
+            <span class="stat-num" data-target="10703">0</span>
+          </div>
           <p class="stat-label">films in the dataset</p>
         </div>
         <div class="stat-card">
-          <span class="stat-num" data-target="10">0</span><span class="stat-unit">%</span>
+          <div class="stat-value">
+            <span class="stat-num" data-target="11">0</span><span class="stat-unit">%</span>
+          </div>
           <p class="stat-label">have no women at all</p>
         </div>
         <div class="stat-card accent">
-          <span class="stat-num" data-target="43">0</span><span class="stat-unit">%</span>
+          <div class="stat-value">
+            <span class="stat-num" data-target="44">0</span><span class="stat-unit">%</span>
+          </div>
           <p class="stat-label">of films fail the test</p>
         </div>
       </div>
@@ -79,7 +86,7 @@
       <div class="filter-row">
         <span class="filter-label">Period:</span>
         <div class="filter-btns">
-          <button class="filter-btn active" data-from="1900" data-to="2020">All</button>
+          <button class="filter-btn active" data-from="1870" data-to="2030">All</button>
           <button class="filter-btn" data-from="1970" data-to="2020">1970–2020</button>
           <button class="filter-btn" data-from="1990" data-to="2020">1990–2020</button>
         </div>
@@ -139,6 +146,10 @@
   <div id="tooltip" class="tooltip"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
-  <script src="chart.js"></script>
+  <script src="charts/shared.js"></script>
+  <script src="charts/bar.js"></script>
+  <script src="charts/line.js"></script>
+  <script src="charts/scatter.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>

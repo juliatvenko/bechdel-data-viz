@@ -86,9 +86,9 @@
       <div class="filter-row">
         <span class="filter-label">Period:</span>
         <div class="filter-btns">
-          <button class="filter-btn active" data-from="1870" data-to="2030">All</button>
-          <button class="filter-btn" data-from="1970" data-to="2020">1970–2020</button>
-          <button class="filter-btn" data-from="1990" data-to="2020">1990–2020</button>
+          <button class="filter-btn filter-btn-bar active" data-from="1870" data-to="2030">All</button>
+          <button class="filter-btn filter-btn-bar" data-from="1970" data-to="2020">1970–2020</button>
+          <button class="filter-btn filter-btn-bar" data-from="1990" data-to="2020">1990–2020</button>
         </div>
       </div>
       <div class="legend">
@@ -113,17 +113,41 @@
     </div>
   </section>
 
-  <!-- CHART 3: SCATTER -->
+  <!-- CHART 3: RADIAL -->
   <section class="section chart-section reveal">
     <div class="container">
       <div class="chart-intro">
-        <p class="section-label">Chart 3 · Budget vs. box office</p>
-        <h2>Do films that pass earn less?</h2>
-        <p class="chart-desc">A common argument against inclusive films is that they underperform commercially. Each dot is a film — colored by pass/fail. Data: FiveThirtyEight (films up to 2013).</p>
+        <p class="section-label">Chart 3 · Genre breakdown</p>
+        <h2>Which genres pass the test?</h2>
+        <p class="chart-desc">Bar length shows the share of films passing the Bechdel Test per genre, sorted from highest to lowest. Color encodes pass rate — red for low, green for high. Only genres with more than 50 films are included.</p>
       </div>
-      <div class="legend">
-        <div class="legend-item"><span class="ldot" style="background:var(--pass)"></span>Passes (rating 3)</div>
-        <div class="legend-item"><span class="ldot" style="background:var(--fail)"></span>Fails (rating 0–2)</div>
+      <div class="filter-row">
+        <span class="filter-label">Period:</span>
+        <div class="filter-btns">
+          <button class="filter-btn filter-btn-radial active" data-from="1870" data-to="2030">All</button>
+          <button class="filter-btn filter-btn-radial" data-from="1970" data-to="2020">1970–2020</button>
+          <button class="filter-btn filter-btn-radial" data-from="1990" data-to="2020">1990–2020</button>
+        </div>
+      </div>
+      <div id="chart-radial"></div>
+    </div>
+  </section>
+
+  <!-- CHART 4: SCATTER -->
+  <section class="section chart-section reveal">
+    <div class="container">
+      <div class="chart-intro">
+        <p class="section-label">Chart 4 · IMDb rating vs Bechdel rating</p>
+        <h2>Do audiences rate inclusive films differently?</h2>
+        <p class="chart-desc">Each dot is a film. Position on X shows its IMDb rating; Y band shows its Bechdel score. Dot size reflects number of IMDb votes. The dashed line marks the median IMDb rating for each group.</p>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">Period:</span>
+        <div class="filter-btns">
+          <button class="filter-btn filter-btn-scatter active" data-from="1870" data-to="2030">All</button>
+          <button class="filter-btn filter-btn-scatter" data-from="1970" data-to="2020">1970–2020</button>
+          <button class="filter-btn filter-btn-scatter" data-from="1990" data-to="2020">1990–2020</button>
+        </div>
       </div>
       <div id="chart-scatter"></div>
     </div>
@@ -136,9 +160,7 @@
       <p>The Bechdel Test doesn't measure the quality of female representation — it only tracks basic presence. A film can fail the test and be brilliant, or pass it and still be deeply stereotypical.</p>
       <p>But as a tool for spotting systemic patterns, it works. From the 1970s to the 2010s, the share of passing films rose from ~45% to ~60%. Progress exists — but it's slow, and largely quantitative rather than qualitative.</p>
       <div class="source-block">
-        <p>Data: <a href="https://bechdeltest.com" target="_blank">bechdeltest.com</a></p>
-        <p>Bechdel dataset: <a href="https://github.com/AlisonYao/HCDS-Bechdel-Test-Final-Project" target="_blank">AlisonYao / HCDS-Bechdel-Test-Final-Project</a></p>
-        <p>Budget & gross data: <a href="https://github.com/fivethirtyeight/data/tree/master/bechdel" target="_blank">FiveThirtyEight</a></p>
+        <p>Data: <a href="https://bechdeltest.com" target="_blank">bechdeltest.com</a> &amp; <a href="https://www.imdb.com" target="_blank">IMDb</a></p>
       </div>
     </div>
   </section>
@@ -149,6 +171,7 @@
   <script src="charts/shared.js"></script>
   <script src="charts/bar.js"></script>
   <script src="charts/line.js"></script>
+  <script src="charts/radial.js"></script>
   <script src="charts/scatter.js"></script>
   <script src="main.js"></script>
 </body>

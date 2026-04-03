@@ -22,5 +22,26 @@ df_clean = (
 
 print(f"Before deduplication: {len(df)}  \nAfter deduplication: {len(df_clean)}")
 
-df_clean.to_csv("data/Bechdel.csv", index=False)
+# Load IMDb data
+basics  = pd.read_csv("https://datasets.imdbws.com/title.basics.tsv.gz",
+                       sep="\t", na_values="\\N",
+                       usecols=["tconst", "titleType", "genres"]
+                      )
+
+ratings = pd.read_csv("https://datasets.imdbws.com/title.ratings.tsv.gz",
+                       sep="\t", na_values="\\N")
+
+
+df_enriched = df_clean.merge(
+    basics,  left_on="imdb_id", right_on="tconst", how="left"
+).merge(
+    ratings, on="tconst", how="left"
+)
+
+df_enriched = df_clean \
+    .merge(basics,  left_on="imdb_id", right_on="tconst", how="left") \
+    .merge(ratings, on="tconst", how="left") \
+    .drop(columns=["tconst"])
+
+df_enriched.to_csv("data/Bechdel.csv", index=False)
 print("Saved to Bechdel.csv")

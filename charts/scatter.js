@@ -1,110 +1,126 @@
 /* =============================================
-   Chart 3 — Scatter Plot
-   Budget (x) vs domestic gross (y), colored by pass/fail.
-   Source: FiveThirtyEight dataset (films up to 2013).
-   Depends on: shared.js  (M, showTip, hideTip)
+   Chart 4 — Scatter Plot
+   IMDb rating (X) vs Bechdel rating band (Y).
+   Dot size = numVotes · color = Bechdel rating.
+   Median IMDb rating per Bechdel group marked.
+   Depends on: shared.js  (COLORS, M, showTip, hideTip)
+               main.js    (raw Bechdel data passed as arg)
    ============================================= */
 
+const SCATTER_LABELS = {
+  0: "0 — no women",
+  1: "1 — one woman",
+  2: "2 — talk about men",
+  3: "3 — passes test"
+};
+
 function drawScatter(data) {
-  // Filter: need both budget and gross to be positive
-  const clean = data.filter(d =>
-    d.budget > 0 && d.gross > 0 &&
-    d.budget < 4e8 && d.gross < 8e8  // remove extreme outliers
-  );
+  d3.select("#chart-scatter").selectAll("*").remove();
+
+  const clean = data.filter(d => d.imdbRating >= 1 && d.numVotes > 0);
 
   if (clean.length === 0) {
     document.getElementById("chart-scatter").innerHTML =
-      `<p style="color:#bbb;font-size:13px;padding:1rem 0">
-        Scatter plot requires the FiveThirtyEight dataset.<br>
-        It loads automatically from GitHub — check your network connection.
-      </p>`;
+      `<p style="color:#bbb;font-size:13px;padding:1rem 0">No IMDb data available.</p>`;
     return;
   }
 
+  const margin = { top: 24, right: 24, bottom: 44, left: 140 };
   const W  = document.getElementById("chart-scatter").clientWidth || 960;
-  const H  = Math.min(440, window.innerHeight * 0.5);
-  const iW = W - M.left - M.right - 20;
-  const iH = H - M.top - M.bottom;
+  const H  = Math.min(380, window.innerHeight * 0.46);
+  const iW = W - margin.left - margin.right;
+  const iH = H - margin.top - margin.bottom;
 
   const svg = d3.select("#chart-scatter").append("svg")
     .attr("width", W).attr("height", H)
-    .attr("viewBox", `0 0 ${W} ${H}`);
-  const g = svg.append("g").attr("transform", `translate(${M.left},${M.top})`);
+    .attr("viewBox", `0 0 ${W} ${H}`)
+    .style("font-family", "'IBM Plex Sans', sans-serif");
 
-  // X: budget (log scale handles wide range better)
-  const x = d3.scaleLog()
-    .domain(d3.extent(clean, d => d.budget))
-    .range([0, iW]).nice();
+  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-  // Y: domestic gross (log scale)
-  const y = d3.scaleLog()
-    .domain(d3.extent(clean, d => d.gross))
-    .range([iH, 0]).nice();
+  // X: IMDb rating 1–10
+  const x = d3.scaleLinear().domain([1, 10]).range([0, iW]).nice();
 
-  // Gridlines
+  // Y: band scale — top = passes (3), bottom = fails (0)
+  const y = d3.scaleBand()
+    .domain([3, 2, 1, 0])
+    .range([0, iH])
+    .padding(0.25);
+
+  // Size: sqrt scale so area ∝ votes; capped to avoid one giant dot
+  const sizeScale = d3.scaleSqrt()
+    .domain([0, d3.quantile(clean.map(d => d.numVotes).sort(d3.ascending), 0.98)])
+    .range([1.5, 6])
+    .clamp(true);
+
+  // Pre-compute stable jitter from IMDb rating fractional part
+  clean.forEach(d => {
+    d._jitter = ((d.imdbRating * 137) % 1 - 0.5) * y.bandwidth() * 0.75;
+  });
+
+  // Vertical gridlines
   g.append("g")
-    .call(d3.axisLeft(y).ticks(5).tickSize(-iW).tickFormat(""))
+    .call(d3.axisBottom(x).ticks(9).tickSize(iH).tickFormat(""))
     .call(g => g.select(".domain").remove())
-    .call(g => g.selectAll(".tick line").attr("stroke","#e8e5de").attr("stroke-dasharray","3,3"));
+    .call(g => g.selectAll(".tick line")
+      .attr("stroke", "#e8e5de").attr("stroke-dasharray", "3,3"));
 
-  // Reference line: gross = budget (break-even)
-  const breakEvenMin = Math.max(x.domain()[0], y.domain()[0]);
-  const breakEvenMax = Math.min(x.domain()[1], y.domain()[1]);
-  g.append("line")
-    .attr("x1", x(breakEvenMin)).attr("y1", y(breakEvenMin))
-    .attr("x2", x(breakEvenMax)).attr("y2", y(breakEvenMax))
-    .attr("stroke","#ccc").attr("stroke-dasharray","4,4")
-    .attr("stroke-width", 1);
-
-  g.append("text")
-    .attr("x", x(breakEvenMax) - 8).attr("y", y(breakEvenMax) - 6)
-    .attr("text-anchor","end").attr("font-size", 10)
-    .attr("fill","#bbb").attr("font-family","'IBM Plex Sans',sans-serif")
-    .text("break even");
-
-  // Dots — fail first (behind), pass on top
-  const sorted = [...clean].sort((a, b) => a.pass - b.pass);
-
-  g.selectAll(".dot").data(sorted).join("circle")
-    .attr("cx", d => x(d.budget))
-    .attr("cy", d => y(d.gross))
-    .attr("r",  3.5)
-    .attr("fill", d => d.pass ? "#2D6A4F" : "#C9503A")
-    .attr("fill-opacity", 0.55)
+  // Dots (fail ratings first so pass sits on top)
+  g.selectAll(".dot")
+    .data([...clean].sort((a, b) => a.rating - b.rating))
+    .join("circle")
+    .attr("cx", d => x(d.imdbRating))
+    .attr("cy", d => y(d.rating) + y.bandwidth() / 2 + d._jitter)
+    .attr("r",  d => sizeScale(d.numVotes))
+    .attr("fill", d => COLORS[d.rating])
+    .attr("fill-opacity", 0.28)
     .attr("stroke", "none")
-    .style("cursor","pointer")
+    .style("cursor", "pointer")
     .on("mousemove", (event, d) => showTip(event, `
       <div class="tooltip-title">${d.title} (${d.year})</div>
-      <div class="tooltip-row"><span>Budget</span><span>$${d3.format(",.0f")(d.budget)}</span></div>
-      <div class="tooltip-row"><span>Domestic gross</span><span>$${d3.format(",.0f")(d.gross)}</span></div>
-      <div class="tooltip-row"><span>Bechdel</span><span>${d.pass ? "✓ Pass" : "✗ Fail"}</span></div>`))
+      <div class="tooltip-row"><span>IMDb rating</span><span>${d.imdbRating.toFixed(1)}</span></div>
+      <div class="tooltip-row"><span>Votes</span><span>${d3.format(",d")(d.numVotes)}</span></div>
+      <div class="tooltip-row"><span>Bechdel</span><span>${d.rating} — ${d.rating === 3 ? "passes" : "fails"}</span></div>`))
     .on("mouseleave", hideTip);
 
-  // X axis — log scale with dollar format
-  g.append("g").attr("transform", `translate(0,${iH})`)
-    .call(d3.axisBottom(x).ticks(6,"$~s").tickSize(0))
-    .call(g => g.select(".domain").attr("stroke","#e0ddd6"))
-    .call(g => g.selectAll("text").attr("fill","#999").attr("font-size",10)
-      .attr("font-family","'IBM Plex Sans',sans-serif").attr("dy","1.4em"));
+  // Median marker per Bechdel group
+  [0, 1, 2, 3].forEach(r => {
+    const med = d3.median(clean.filter(d => d.rating === r), d => d.imdbRating);
+    if (med == null) return;
+    const bandY = y(r);
+    const bw    = y.bandwidth();
 
-  // Y axis
+    g.append("line")
+      .attr("x1", x(med)).attr("x2", x(med))
+      .attr("y1", bandY + bw * 0.08).attr("y2", bandY + bw * 0.92)
+      .attr("stroke", COLORS[r]).attr("stroke-width", 2)
+      .attr("stroke-dasharray", "4,3").attr("opacity", 0.9);
+
+    g.append("text")
+      .attr("x", x(med)).attr("y", bandY - 4)
+      .attr("text-anchor", "middle").attr("font-size", 9)
+      .attr("fill", COLORS[r])
+      .text(`med ${med.toFixed(1)}`);
+  });
+
+  // X axis
   g.append("g")
-    .call(d3.axisLeft(y).ticks(5,"$~s"))
-    .call(g => g.select(".domain").remove())
-    .call(g => g.selectAll(".tick line").remove())
-    .call(g => g.selectAll("text").attr("fill","#aaa").attr("font-size",10)
-      .attr("font-family","'IBM Plex Sans',sans-serif"));
+    .attr("transform", `translate(0,${iH})`)
+    .call(d3.axisBottom(x).ticks(9).tickSize(0))
+    .call(g => g.select(".domain").attr("stroke", "#e0ddd6"))
+    .call(g => g.selectAll("text")
+      .attr("fill", "#999").attr("font-size", 11).attr("dy", "1.4em"));
 
-  // Axis labels
-  svg.append("text").attr("x", M.left + iW/2).attr("y", H - 4)
-    .attr("text-anchor","middle").attr("font-size",11).attr("fill","#bbb")
-    .attr("font-family","'IBM Plex Sans',sans-serif")
-    .text("Production budget (inflation-adjusted to 2013 USD)");
-
+  // X axis label
   svg.append("text")
-    .attr("transform","rotate(-90)")
-    .attr("x", -(M.top + iH/2)).attr("y", 14)
-    .attr("text-anchor","middle").attr("font-size",11).attr("fill","#bbb")
-    .attr("font-family","'IBM Plex Sans',sans-serif")
-    .text("Domestic gross (2013 USD)");
+    .attr("x", margin.left + iW / 2).attr("y", H - 4)
+    .attr("text-anchor", "middle").attr("font-size", 11).attr("fill", "#bbb")
+    .text("IMDb rating");
+
+  // Y axis — colored descriptive labels
+  g.append("g")
+    .call(d3.axisLeft(y).tickFormat(d => SCATTER_LABELS[d]).tickSize(0))
+    .call(g => g.select(".domain").remove())
+    .call(g => g.selectAll(".tick text")
+      .attr("fill", d => COLORS[d]).attr("font-size", 11).attr("dx", "-8"));
 }

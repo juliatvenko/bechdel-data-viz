@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Bechdel Test — 100 Years of Cinema</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">Data · Gender · Cinema</p>
+      <h1>Do women<br><em>exist in film?</em></h1>
+      <p class="hero-lead">The Bechdel Test checks three deceptively simple conditions. Most Hollywood films still fail them.</p>
+      <div class="hero-meta">9,832 films · 1888–2020 · bechdeltest.com</div>
+    </div>
+    <div class="hero-scroll">↓</div>
+  </section>
+
+  <!-- RULES -->
+  <section class="section rules-section">
+    <div class="container narrow">
+      <p class="section-label">What is the Bechdel Test</p>
+      <h2>Three conditions<br>surprisingly hard to meet</h2>
+      <div class="rules">
+        <div class="rule reveal">
+          <span class="rule-n">01</span>
+          <p>The film has <strong>at least two named women</strong> in it</p>
+        </div>
+        <div class="rule reveal">
+          <span class="rule-n">02</span>
+          <p>Who <strong>talk to each other</strong></p>
+        </div>
+        <div class="rule reveal">
+          <span class="rule-n">03</span>
+          <p>About something <strong>other than a man</strong></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BIG NUMBERS -->
+  <section class="section stats-section reveal">
+    <div class="container">
+      <p class="section-label">The big picture</p>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-num" data-target="57">0</span><span class="stat-unit">%</span>
+          <p class="stat-label">of films pass the test</p>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" data-target="9832">0</span>
+          <p class="stat-label">films in the dataset</p>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" data-target="10">0</span><span class="stat-unit">%</span>
+          <p class="stat-label">have no women at all</p>
+        </div>
+        <div class="stat-card accent">
+          <span class="stat-num" data-target="43">0</span><span class="stat-unit">%</span>
+          <p class="stat-label">of films fail the test</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHART 1: STACKED BAR -->
+  <section class="section chart-section reveal">
+    <div class="container">
+      <div class="chart-intro">
+        <p class="section-label">Chart 1 · Decade breakdown</p>
+        <h2>How rating distribution shifted over time</h2>
+        <p class="chart-desc">Each bar = 100% of films in that decade. Color encodes how far each film got on the test.</p>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">Period:</span>
+        <div class="filter-btns">
+          <button class="filter-btn active" data-from="1900" data-to="2020">All</button>
+          <button class="filter-btn" data-from="1970" data-to="2020">1970–2020</button>
+          <button class="filter-btn" data-from="1990" data-to="2020">1990–2020</button>
+        </div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><span class="ldot" style="background:var(--pass)"></span>3 — passes the test</div>
+        <div class="legend-item"><span class="ldot" style="background:var(--pass2)"></span>2 — women talk about men</div>
+        <div class="legend-item"><span class="ldot" style="background:var(--warn)"></span>1 — only one named woman</div>
+        <div class="legend-item"><span class="ldot" style="background:var(--fail)"></span>0 — no women at all</div>
+      </div>
+      <div id="chart-bar"></div>
+    </div>
+  </section>
+
+  <!-- CHART 2: LINE -->
+  <section class="section chart-section reveal">
+    <div class="container">
+      <div class="chart-intro">
+        <p class="section-label">Chart 2 · Trend over time</p>
+        <h2>Share of films fully passing the test</h2>
+        <p class="chart-desc">Is cinema actually becoming more inclusive? The line shows the share of films with rating 3 per decade since the 1960s.</p>
+      </div>
+      <div id="chart-line"></div>
+    </div>
+  </section>
+
+  <!-- CHART 3: SCATTER -->
+  <section class="section chart-section reveal">
+    <div class="container">
+      <div class="chart-intro">
+        <p class="section-label">Chart 3 · Budget vs. box office</p>
+        <h2>Do films that pass earn less?</h2>
+        <p class="chart-desc">A common argument against inclusive films is that they underperform commercially. Each dot is a film — colored by pass/fail. Data: FiveThirtyEight (films up to 2013).</p>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><span class="ldot" style="background:var(--pass)"></span>Passes (rating 3)</div>
+        <div class="legend-item"><span class="ldot" style="background:var(--fail)"></span>Fails (rating 0–2)</div>
+      </div>
+      <div id="chart-scatter"></div>
+    </div>
+  </section>
+
+  <!-- OUTRO -->
+  <section class="section outro reveal">
+    <div class="container narrow">
+      <h2>The bar is low.<br>And yet.</h2>
+      <p>The Bechdel Test doesn't measure the quality of female representation — it only tracks basic presence. A film can fail the test and be brilliant, or pass it and still be deeply stereotypical.</p>
+      <p>But as a tool for spotting systemic patterns, it works. From the 1970s to the 2010s, the share of passing films rose from ~45% to ~60%. Progress exists — but it's slow, and largely quantitative rather than qualitative.</p>
+      <div class="source-block">
+        <p>Data: <a href="https://bechdeltest.com" target="_blank">bechdeltest.com</a></p>
+        <p>Bechdel dataset: <a href="https://github.com/AlisonYao/HCDS-Bechdel-Test-Final-Project" target="_blank">AlisonYao / HCDS-Bechdel-Test-Final-Project</a></p>
+        <p>Budget & gross data: <a href="https://github.com/fivethirtyeight/data/tree/master/bechdel" target="_blank">FiveThirtyEight</a></p>
+      </div>
+    </div>
+  </section>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <script src="chart.js"></script>
+</body>
+</html>
